@@ -5,6 +5,10 @@ import node from '@astrojs/node';
 
 import auth from 'auth-astro';
 
+import db from '@astrojs/db';
+
+import tailwindcss from '@tailwindcss/vite';
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
@@ -13,5 +17,9 @@ export default defineConfig({
     mode: 'standalone'
   }),
 
-  integrations: [auth()]
+  integrations: [auth(), db()],
+
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });
