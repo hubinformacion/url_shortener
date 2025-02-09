@@ -1,11 +1,35 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import { getSession } from 'auth-astro/server';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const session = await getSession(Astro.request);
+console.log(session);
 ---
 
 <Layout>
-	<Welcome />
+	<main>
+		{
+			session ? (
+				<p>Welcome {session.user?.name}</p>
+			) : (
+				<p>Not logged in</p>
+			)
+		}
+		<button id="login">Login</button>
+		<button id="logout">Logout</button>
+	</main>
+
+	<script>
+		const { signIn, signOut } = await import("auth-astro/client");
+
+		const login = document.querySelector("#login") as HTMLButtonElement;
+		if (login) {
+			login.onclick = () => signIn("google");
+		}
+
+		const logout = document.querySelector("#logout") as HTMLButtonElement;
+		if (logout) {
+			logout.onclick = () => signOut();
+		}
+	</script>
 </Layout>
