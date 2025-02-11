@@ -1,18 +1,34 @@
 ---
+import { db, like, User } from "astro:db";
 import { getSession } from "auth-astro/server";
 
 const session = await getSession(Astro.request);
-console.log(session);
+
+if (session && session?.user?.email && session.user?.name) {
+  const res = await db
+    .select()
+    .from(User)
+    .where(like(User.email, session.user.email));
+
+  if (res.length === 0) {
+    await db.insert(User).values({
+      email: session.user.email,
+      name: session.user.name,
+    });
+  }
+}
 ---
 
 <header class="bg-blue-600 text-white shadow-lg">
   <div class="container mx-auto flex items-center justify-between p-4">
     <div class="flex items-center space-x-4">
-      {session ? (
-        <p class="text-lg font-semibold">Welcome, {session.user?.name}</p>
-      ) : (
-        <p class="text-lg font-semibold">Not logged in</p>
-      )}
+      {
+        session ? (
+          <p class="text-lg font-semibold">Welcome, {session.user?.name}</p>
+        ) : (
+          <p class="text-lg font-semibold">Not logged in</p>
+        )
+      }
     </div>
 
     <div class="flex space-x-4">
