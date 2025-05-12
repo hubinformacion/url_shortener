@@ -1,5 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/astro/components";
 ---
 
 <Layout title="🔓 Público - Home">
@@ -9,11 +15,26 @@ import Layout from "../layouts/Layout.astro";
       Esta es una aplicación para acortar URLs sólo para usuarios autenticados.
     </p>
 
-    <div class="mt-12">
-      <button class="bg-blue-500 text-white px-4 py-2 rounded">Iniciar sesión</button>
-    </div>
+    <SignedOut>
+      <div class="mt-12">
+        <SignInButton
+        mode="modal"
+        class="bg-blue-500 text-white px-4 py-2 rounded"
+        
+          >Iniciar sesión</SignInButton
+        >
+      </div>
+    </SignedOut>
 
-    <p class="mt-12"
-    >Si ya has iniciado sesión, entra a tu <a class="underline text-sky-300" href="/urls">panel de URLs.</a></p>
+    <SignedIn>
+      <UserButton showName/>
+      <p class="mt-12">Ya has iniciado sesión. Entra a tu panel de urls.</p>
+      <p class="mt-12">
+        Si ya has iniciado sesión, entra a tu <a
+          class="underline text-sky-300"
+          href="/urls">panel de URLs.</a
+        >
+      </p>
+    </SignedIn>
   </main>
 </Layout>
